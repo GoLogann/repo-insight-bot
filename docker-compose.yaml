@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  chromadb:
+    image: chromadb/chroma:0.6.3
+    container_name: chromadb_server
+    volumes:
+      - ./chromadb_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=FALSE
+    ports:
+      - "8000:8000"
+    networks:
+      - repo_insight_bot_network
+    restart: unless-stopped
+
+networks:
+  repo_insight_bot_network:
+    name: repo_insight_bot_network
+    driver: bridge
