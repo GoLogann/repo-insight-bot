@@ -1,7 +1,3 @@
-Aqui está o `README.md` completo com as atualizações incluindo o uso do modelo **deepseek-r1:8b** no Ollama server:
-
----
-
 # repo-insight-bot
 
 **repo-insight-bot** é uma aplicação que utiliza inteligência artificial para gerar insights sobre repositórios do GitHub. Ele processa dados de repositórios, gera embeddings utilizando Sentence Transformers, armazena os dados no QdrantDB, e permite consultas interativas para responder perguntas sobre o repositório.
