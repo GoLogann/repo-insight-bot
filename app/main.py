@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1.endpoints import chatbot
+from app.api.router import router as api_router
 
 app = FastAPI(
     title= "Repo Insight Bot",
@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(chatbot.router)
+app.include_router(api_router)
 
 if __name__ == "__main__":
     uvicorn.run(
