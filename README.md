@@ -94,5 +94,3 @@ POST /repo-insight-bot/ask
 - Certifique-se de que o contêiner do Ollama esteja em execução antes de configurar o modelo.
 
 ---
-
-Se precisar de mais ajustes ou tiver dúvidas, é só avisar! 😊
