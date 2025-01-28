@@ -59,15 +59,12 @@ class QdrantVectorStore:
         if not self.client.collection_exists(collection_name):
             raise ValueError(f"Collection '{collection_name}' not found.")
 
-        # Fetch points (documents) from the collection
         scroll_result = self.client.scroll(collection_name=collection_name)
 
-        # Access the list of records from scroll_result[0]
         points = scroll_result[0]
 
         documents = []
         for point in points:
-            # Ensure that the vector (embedding) is not None; if so, set it to an empty list
             vector = point.vector if point.vector is not None else []
             documents.append(Document(text=point.payload["text"], embedding=vector))
 
