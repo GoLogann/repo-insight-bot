@@ -1,7 +1,8 @@
-from app.infrastructure.openai.embedding_client import OpenAIEmbeddingClient
+from app.infrastructure.sentence_transformers.embedding_client import SentenceTransformersEmbeddingClient
+
 
 class EmbeddingService:
-    def __init__(self, embedding_client: OpenAIEmbeddingClient):
+    def __init__(self, embedding_client: SentenceTransformersEmbeddingClient):
         self.embedding_client = embedding_client
 
     def generate_embeddings(self, chunks):
