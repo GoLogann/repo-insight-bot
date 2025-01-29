@@ -46,5 +46,5 @@ class ResponseGenerator:
             return self.session_manager.get_history(user_id)
 
         except Exception as e:
-            logging.error(f"Erro na geração de resposta: {e}")
+            logging.error(f"Error generating response: {e}")
             return []

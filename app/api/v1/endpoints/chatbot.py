@@ -27,7 +27,7 @@ async def ask_question(request: QueryRequest):
         session_manager = SessionManager()
 
         if not session_manager.get_history(request.user_id):
-            session_manager.clear_history(request.user_id)
+            session_manager.create_session(request.user_id)
             logging.info(f"New session created for user_id: {request.user_id}")
 
         repo_data = PyDrillerClient().fetch_repository_data(request.repo_url)

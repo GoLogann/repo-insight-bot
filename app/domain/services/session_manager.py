@@ -1,3 +1,5 @@
+import logging
+
 import redis
 import json
 from typing import List, Dict
@@ -9,6 +11,19 @@ class SessionManager:
     @staticmethod
     def _get_key(user_id: str) -> str:
         return f"session:{user_id}"
+
+    def create_session(self, user_id: str) -> None:
+        key = self._get_key(user_id)
+
+        if not self.session_exists(user_id):
+            self.redis.hset(key, "status", "active")
+            logging.info(f"New session created for user_id: {user_id}")
+        else:
+            logging.info(f"Session already exists for user_id: {user_id}")
+
+    def session_exists(self, user_id: str) -> bool:
+        key = self._get_key(user_id)
+        return self.redis.exists(key) == 1
 
     def add_message(self, user_id: str, role: str, content: str) -> None:
         key = self._get_key(user_id)
