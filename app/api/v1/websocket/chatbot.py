@@ -1,6 +1,5 @@
+import socketio
 import logging
-
-from fastapi import APIRouter, HTTPException
 
 from app.domain.schema.chat_response import ChatResponseSchema, AnswerAndQuestionSchema
 from app.domain.schema.query import QueryRequest
@@ -13,17 +12,27 @@ from app.infrastructure.qdrant.store import QdrantVectorStore
 from app.infrastructure.github.pydriller_client import PyDrillerClient
 from app.infrastructure.sentence_transformers.embedding_client import SentenceTransformersEmbeddingClient
 
-router = APIRouter()
+document_processor = DocumentProcessor()
+embedding_service = EmbeddingService(SentenceTransformersEmbeddingClient())
+vector_store = QdrantVectorStore()
+retriever = DocumentRetriever(vector_store)
+response_generator = ResponseGenerator()
+session_manager = SessionManager()
 
-@router.post(path="/api/repo-insight-bot/chat", response_model=ChatResponseSchema)
-async def ask_question(request: QueryRequest):
+sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins="*")
+
+@sio.event
+async def connect(sid, environ):
+    logging.info(f"Client connected: {sid}")
+
+@sio.event
+async def disconnect(sid):
+    logging.info(f"Client disconnected: {sid}")
+
+@sio.event
+async def ask_question(sid, data):
     try:
-        document_processor = DocumentProcessor()
-        embedding_service = EmbeddingService(SentenceTransformersEmbeddingClient())
-        vector_store = QdrantVectorStore()
-        retriever = DocumentRetriever(vector_store)
-        response_generator = ResponseGenerator()
-        session_manager = SessionManager()
+        request = QueryRequest(**data)
 
         if not session_manager.get_history(request.user_id):
             session_manager.create_session(request.user_id)
@@ -48,9 +57,8 @@ async def ask_question(request: QueryRequest):
             if msg["role"] == "user" and next_msg["role"] == "assistant"
         ]
 
-        return ChatResponseSchema(chat_history=formatted_history)
+        await sio.emit("response", ChatResponseSchema(chat_history=formatted_history).dict(), to=sid)
 
-    except HTTPException as http_err:
-        raise http_err
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+        logging.error(f"Error processing question: {e}")
+        await sio.emit("error", {"detail": str(e)}, to=sid)
