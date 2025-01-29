@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class QueryRequest(BaseModel):
     repo_url: Optional[str]
     question: Optional[str]
+    user_id: Optional[str]
 
     class Config:
         populate_by_name = True
