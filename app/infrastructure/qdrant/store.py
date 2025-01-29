@@ -1,19 +1,14 @@
 import uuid
-from typing import List, Any
+from typing import List
 
-from pydantic import BaseModel
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
 from urllib.parse import urlparse
 
 from app.core.config import settings
+from app.domain.schema.document import Document
+from app.domain.schema.query import QueryResponse
 
-class Document(BaseModel):
-    text: str
-    embedding: List[float]
-
-class QueryResponse(BaseModel):
-    text: str
 
 class QdrantVectorStore:
     def __init__(self):

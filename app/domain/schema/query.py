@@ -10,3 +10,6 @@ class QueryRequest(BaseModel):
     class Config:
         populate_by_name = True
         from_attributes = True
+
+class QueryResponse(BaseModel):
+    text: str
