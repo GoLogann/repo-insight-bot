@@ -19,6 +19,10 @@ class QdrantVectorStore:
         parsed_url = urlparse(repo_url)
         return parsed_url.path.strip("/").split("/")[-1]
 
+    def is_repo_processed(self, repo_url: str) -> bool:
+
+        return self.client.collection_exists(self._extract_repo_name(repo_url))
+
     def save(self, repo_url: str, chunks: List[str], chunk_embeddings: List[List[float]]):
         collection_name = self._extract_repo_name(repo_url)
 
