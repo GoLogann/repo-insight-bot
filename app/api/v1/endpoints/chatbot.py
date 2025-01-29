@@ -10,7 +10,7 @@ from app.domain.services.document_processor import DocumentProcessor
 from app.domain.services.embedding_service import EmbeddingService
 from app.domain.services.response_generator import ResponseGenerator
 from app.domain.services.retriever import DocumentRetriever
-from app.domain.services.session_management import SessionManager
+from app.domain.services.session_manager import SessionManager
 from app.infrastructure.qdrant.store import QdrantVectorStore
 from app.infrastructure.github.pydriller_client import PyDrillerClient
 from app.infrastructure.sentence_transformers.embedding_client import SentenceTransformersEmbeddingClient
