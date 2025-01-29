@@ -70,7 +70,8 @@ POST /repo-insight-bot/ask
 ```json
 {
   "repo_url": "https://github.com/GoLogann/phishing-quest-api",
-  "question": "Qual é o objetivo deste repositório?"
+  "question": "Qual é o objetivo deste repositório?", 
+  "user_id": "e9ae996e-b7d7-4931-bea8-9f3e79185738"
 }
 ```
 
@@ -78,7 +79,16 @@ POST /repo-insight-bot/ask
 
 ```json
 {
-  "response": "O repositório é uma API para um game estilo quizz"
+  "chat_history": [
+    {
+      "question": "Qual é o propósito deste repositório?",
+      "answer": "Este repositório é um exemplo de uso do Redis para gerenciamento de sessões."
+    },
+    {
+      "question": "Como posso contribuir?",
+      "answer": "Você pode abrir issues ou enviar pull requests com melhorias."
+    }
+  ]
 }
 ```
 
