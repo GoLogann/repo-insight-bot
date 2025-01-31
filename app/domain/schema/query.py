@@ -14,3 +14,7 @@ class QueryRequest(BaseModel):
 
 class QueryResponse(BaseModel):
     text: str
+
+class RepoRequest(BaseModel):
+    repo_url: str
+    github_token: str
