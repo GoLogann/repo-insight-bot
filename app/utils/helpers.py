@@ -1,6 +1,6 @@
 import os
 import shutil
-
+from urllib.parse import urlparse
 import chardet
 
 
@@ -20,7 +20,6 @@ def convert_to_txt(file_path, txt_path):
     except Exception as e:
         print(f"Error processing file {file_path}: {e}")
         return
-
 
 def find_and_convert_in_dir(dir_path):
     for root, _, files in os.walk(dir_path):
@@ -43,9 +42,6 @@ def is_repo_downloaded(repo_url):
 def extract_repo_name_and_owner(repo_url: str) -> str:
     path = urlparse(repo_url).path
     return path.strip("/")
-
-
-from urllib.parse import urlparse
 
 def extract_repo_name(repo_url: str) -> str:
     path = urlparse(repo_url).path
