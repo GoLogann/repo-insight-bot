@@ -13,6 +13,21 @@ class ResponseGenerator:
         self.session_manager = SessionManager()
 
     async def generate_response(self, user_id: str, question: str, context: str) -> List[Dict[str, str]]:
+        """
+        Generate a chat response for a given user query using the context provided.
+
+        This asynchronous method processes a user's question by adding it to the session history,
+        constructs a message list for the AI model, and generates a response using the specified model.
+        The response is then added to the session history.
+
+        Args:
+            user_id (str): The unique identifier of the user.
+            question (str): The user's question to be answered.
+            context (str): Additional context to assist in generating an accurate response.
+
+        Returns:
+            List[Dict[str, str]]: The updated chat history including the user's question and the AI's response.
+        """
         try:
             self.session_manager.add_message(user_id, "user", question)
 
@@ -36,7 +51,7 @@ class ResponseGenerator:
                 model=settings.MODEL_NAME_LLM,
                 messages=messages,
                 options={
-                    "temperature": 0.5,
+                    "temperature": 0,
                     "max_tokens": 200
                 }
             )

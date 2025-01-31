@@ -1,3 +1,7 @@
-from .endpoints.chatbot import router
+from .endpoints.extract import app
+from .endpoints.chatbot import chat
 
-__all__ = ["router"]
+__all__ = [
+    "app",
+    "chat"
+]
