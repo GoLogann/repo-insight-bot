@@ -1,8 +1,9 @@
 import json
-from datetime import datetime
-from app.core.config import settings
+import logging
 import traceback
-
+from datetime import datetime
+from typing import Any, List
+from app.core.config import settings
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -10,35 +11,34 @@ class CustomJSONEncoder(json.JSONEncoder):
             return obj.isoformat()
         return super().default(obj)
 
-
 class DocumentProcessor:
     @staticmethod
-    def process_repository_data(repo_data):
+    def _create_chunks(data: str) -> List[str]:
+        return [data[i:i + settings.CHUNK_SIZE] for i in range(0, len(data), settings.CHUNK_SIZE)]
+
+    @staticmethod
+    def process_repository_data(repo_data: str) -> List[str]:
+        """
+        Processa os dados de um reposit rio, separando-os em chunks menores para
+        posteriormente serem enviados para o Elasticsearch.
+
+        :param repo_data: Dados do reposit rio em formato de string no formato JSON
+        :return: Uma lista de strings, cada uma representando um chunk do dado
+        """
         chunks = []
-        for commit in repo_data:
-            try:
-                if not isinstance(commit, dict):
-                    try:
-                        commit_dict = commit.__dict__
-                    except AttributeError:
-                        commit_dict = {attr: getattr(commit, attr) for attr in dir(commit)
-                                       if not attr.startswith('__') and not callable(getattr(commit, attr))}
-                else:
-                    commit_dict = commit.copy()
 
-                for key, value in commit_dict.items():
-                    if isinstance(value, datetime):
-                        commit_dict[key] = value.isoformat()
+        try:
+            data = json.loads(repo_data)
 
-                data = json.dumps(commit_dict, cls=CustomJSONEncoder)
+            json_data = json.dumps(data, cls=CustomJSONEncoder)
 
-                for i in range(0, len(data), settings.CHUNK_SIZE):
-                    chunk = data[i:i + settings.CHUNK_SIZE]
-                    chunks.append(chunk)
+            chunks = DocumentProcessor._create_chunks(json_data)
 
-            except Exception as e:
-                print(f"Erro ao processar commit: {e}")
-                print(traceback.format_exc())
-                continue
+        except json.JSONDecodeError as e:
+            logging.error(f"Erro ao decodificar JSON: {e}")
+            logging.error(traceback.format_exc())
+        except Exception as e:
+            logging.error(f"Erro ao processar dado: {e}")
+            logging.error(traceback.format_exc())
 
         return chunks
