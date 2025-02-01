@@ -34,6 +34,18 @@ services:
     networks:
       - repo_insight_bot_network
 
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: rabbitmq-server
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+    networks:
+      - repo_insight_bot_network
+
 networks:
   repo_insight_bot_network:
     name: repo_insight_bot_network
